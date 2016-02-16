@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Saucy</id>
+    <version>$version$</version>
+    <title>Saucy</title>
+    <authors>acraven</authors>
+    <owners>Epworth Consulting Ltd, acraven</owners>
+    <licenseUrl>https://github.com/acraven/core/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/acraven/core</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Source code package manager for .NET</description>
+    <copyright>(c) Epworth Consulting Ltd</copyright>
+    <tags>Source Package</tags>
+  </metadata>
+</package>
