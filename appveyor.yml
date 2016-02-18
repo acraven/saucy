@@ -9,6 +9,8 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 cache: C:\Users\appveyor\AppData\Local\NuGet\Cache
+init:
+- git config --global core.autocrlf true
 before_build:
 - nuget restore Saucy.sln
 build:
