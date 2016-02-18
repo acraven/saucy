@@ -20,6 +20,8 @@ namespace Saucy.Providers.GitHub.Tests
         [Test]
         public void pull_first_commit_of_example_a()
         {
+            Console.WriteLine("Environment.NewLine length {0}", Environment.NewLine.Length);
+
             var testSubject = new GitHubProvider();
             var source = JObject.Parse("{owner:\"acraven\",repository:\"saucy-examples\",commit:\"39f87ac936ae9fc1b11ef749538e61417d447917\",path:\"src/Saucy.Example.ProjectA\"}");
 
