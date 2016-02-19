@@ -13,9 +13,10 @@ before_build:
 - nuget restore Saucy.sln
 build:
   project: Saucy.sln
-  publish_nuget: true
-  include_nuget_references: true
   verbosity: normal
+after_build:
+- .\packages\ilmerge.2.14.1208\tools\ilmerge.exe /allowDup /wildcards /out:saucy.exe src\Saucy\bin\Release\Saucy.exe src\Saucy\bin\Release\*.dll
+- nuget pack Saucy.nuspec -Version "%APPVEYOR_BUILD_VERSION%" -Properties "Configuration=Release;Platform=AnyCPU"
 artifacts:
 - path: Saucy.nupkg
 - path: ConsoleOut.log
