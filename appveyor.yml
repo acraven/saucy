@@ -3,14 +3,12 @@ configuration: Release
 platform: Any CPU
 clone_depth: 1
 assembly_info:
-  patch: false
+  patch: true
   file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 cache: C:\Users\appveyor\AppData\Local\NuGet\Cache
-init:
-- git config --global core.autocrlf true
 before_build:
 - nuget restore Saucy.sln
 build:
