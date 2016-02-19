@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Saucy.Providers.GitHub.Tests</RootNamespace>
     <AssemblyName>Saucy.Providers.GitHub.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,30 +33,16 @@
   <ItemGroup>
     <Compile Include="GitHubProviderIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="TestData\FirstCommitProjectA\Saucy.Example.ProjectA\Properties\AssemblyInfo.cs">
+    <None Include="TestData\FirstCommitProjectA.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\FirstCommitProjectA\Saucy.Example.ProjectA\Status.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\SecondCommitProjectA\Saucy.Example.ProjectA\Properties\AssemblyInfo.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\SecondCommitProjectA\Saucy.Example.ProjectA\Status.cs">
+    <None Include="TestData\SecondCommitProjectA.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TestData\FirstCommitProjectA\Saucy.Example.ProjectA\Saucy.Example.ProjectA.csproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\SecondCommitProjectA\Saucy.Example.ProjectA\Saucy.Example.ProjectA.csproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +55,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Saucy.Providers.GitHub\Saucy.Providers.GitHub.csproj">
@@ -80,6 +67,7 @@
       <Name>Saucy</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

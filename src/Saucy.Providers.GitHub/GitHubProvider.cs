@@ -49,8 +49,6 @@ namespace Saucy.Providers.GitHub
 
                     WriteFile(Path.Combine(targetPath, treeItem.Path), blob.Content, blob.Encoding);
                 }
-
-                Console.WriteLine("{0} {1}", treeItem.Path, treeItem.Sha);
             }
         }
 
