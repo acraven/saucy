@@ -1,12 +1,26 @@
 ﻿using System;
+using CLAP;
+using Saucy.Actions;
 
 namespace Saucy
 {
-   class Program
+   public class Program
    {
-      static void Main(string[] args)
+      public static void Main(string[] args)
       {
-         Console.WriteLine("USAGE:\n   Saucy --help | --restore");
+         var parser = new Parser<SaucyCommandLine>();
+
+         parser.Register.EmptyHandler(() => WriteUsage(parser));
+         parser.Register.HelpHandler("?,h,help", Console.WriteLine);
+         parser.Register.ErrorHandler(e => { WriteUsage(parser); Console.WriteLine(e.Exception.Message); });
+
+         parser.Run(args, new SaucyCommandLine(new PackagesRestorer()));
+      }
+
+      private static void WriteUsage(MultiParser parser)
+      {
+         Console.WriteLine("USAGE: saucy");
+         Console.WriteLine(parser.GetHelpString());
       }
    }
 }

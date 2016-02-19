@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucy.Providers.GitHub", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucy.Providers.GitHub.Tests", "src\Saucy.Providers.GitHub.Tests\Saucy.Providers.GitHub.Tests.csproj", "{57F10B21-C0C3-4E4E-B439-006CFE16404C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saucy.Tests", "src\Saucy.Tests\Saucy.Tests.csproj", "{2F8A1AF5-085F-49B3-853D-A65DED568EB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{57F10B21-C0C3-4E4E-B439-006CFE16404C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57F10B21-C0C3-4E4E-B439-006CFE16404C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57F10B21-C0C3-4E4E-B439-006CFE16404C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F8A1AF5-085F-49B3-853D-A65DED568EB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F8A1AF5-085F-49B3-853D-A65DED568EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F8A1AF5-085F-49B3-853D-A65DED568EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F8A1AF5-085F-49B3-853D-A65DED568EB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
