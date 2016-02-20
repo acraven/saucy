@@ -27,3 +27,10 @@ deploy:
   api_key:
     secure: 4eGPThK/wSpRmfINQgAGQZD/e8r6FKRfp0SN4nB5/FBTHKJ1xIf/BK3/Iz5csDFm
   artifact: /.*\.nupkg/
+on_success:
+- git config --global credential.helper store
+- git config --global user.email "andrew@epworth-consulting.co.uk"
+- git config --global user.name "Andrew Craven"
+- ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
+- git tag build-%APPVEYOR_BUILD_VERSION%
+- git push origin --tags
