@@ -70,8 +70,6 @@ namespace Saucy.Providers.GitHub.Tests
             var actualContents = File.ReadAllBytes(actualFile);
             var expectedContents = File.ReadAllBytes(expectedFile);
 
-            Console.WriteLine("Actual {0} Expected {1}", actualContents.Length, expectedContents.Length);
-
             Assert.That(actualContents.Length, Is.EqualTo(expectedContents.Length), string.Format("Length of files {0} and {1} must match", actualFile, expectedFile));
             Assert.That(actualContents, Is.EquivalentTo(expectedContents), string.Format("Content of files {0} and {1} must match", actualFile, expectedFile));
          }
