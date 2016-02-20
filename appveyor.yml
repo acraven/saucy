@@ -1,4 +1,7 @@
 version: 0.0.{build}
+environment:
+  GITHUB_ACCESS_TOKEN:
+    secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
 configuration: Release
 platform: Any CPU
 clone_depth: 1

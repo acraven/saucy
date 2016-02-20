@@ -7,72 +7,91 @@ using Octokit;
 
 namespace Saucy.Providers.GitHub
 {
-    public class GitHubProvider : IProvider
-    {
-        public void Pull(JObject source, string localPath)
-        {
-            var owner = source["owner"].ToString();
-            var repository = source["repository"].ToString();
-            var commitSha = source["commit"].ToString();
-            var path = source["path"].ToString();
-            var pathElements = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+   public class GitHubProvider : IProvider
+   {
+      private readonly string _accessToken;
 
-            var targetPath = Path.Combine(localPath, pathElements.Last());
-            EnsureFolderExists(targetPath);
+      private GitHubProvider(string accessToken)
+      {
+         _accessToken = accessToken;
+      }
 
-            var github = new GitHubClient(new ProductHeaderValue("Saucy.Providers.GitHub"));
+      public static GitHubProvider Create()
+      {
+         var accessToken = Environment.GetEnvironmentVariable("GITHUB_ACCESS_TOKEN");
 
-            // TODO: DO NOT COMMIT WITH REAL CREDENTIALS
-            //var basicAuth = new Credentials(null, null);
-            //github.Credentials = basicAuth;
+         if (string.IsNullOrEmpty(accessToken))
+         {
+            throw new InvalidDataException("Environment variable GITHUB_ACCESS_TOKEN not found or empty");
+         }
 
-            var folderSha = commitSha;
+         var provider = new GitHubProvider(accessToken);
+         return provider;
+      }
 
-            foreach (var pathElement in pathElements)
+      public void Pull(JObject source, string localPath)
+      {
+         var owner = source["owner"].ToString();
+         var repository = source["repository"].ToString();
+         var commitSha = source["commit"].ToString();
+         var path = source["path"].ToString();
+         var pathElements = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+         var targetPath = Path.Combine(localPath, pathElements.Last());
+         EnsureFolderExists(targetPath);
+
+         var github = new GitHubClient(new ProductHeaderValue("Saucy.Providers.GitHub"))
+         {
+            Credentials = new Credentials(_accessToken)
+         };
+
+         var folderSha = commitSha;
+
+         foreach (var pathElement in pathElements)
+         {
+            var folderTree = github.Git.Tree.Get(owner, repository, folderSha).Result.Tree;
+            var childFolder = folderTree.Single(c => c.Path == pathElement);
+            folderSha = childFolder.Sha;
+         }
+
+         var sourceTree = github.Git.Tree.GetRecursive(owner, repository, folderSha).Result.Tree;
+
+         foreach (var treeItem in sourceTree)
+         {
+            if (treeItem.Type == TreeType.Tree)
             {
-                var folderTree = github.Git.Tree.Get(owner, repository, folderSha).Result.Tree;
-                var childFolder = folderTree.Single(c => c.Path == pathElement);
-                folderSha = childFolder.Sha;
+               EnsureFolderExists(Path.Combine(targetPath, treeItem.Path));
             }
-
-            var sourceTree = github.Git.Tree.GetRecursive(owner, repository, folderSha).Result.Tree;
-
-            foreach (var treeItem in sourceTree)
+            else if (treeItem.Type == TreeType.Blob)
             {
-                if (treeItem.Type == TreeType.Tree)
-                {
-                    EnsureFolderExists(Path.Combine(targetPath, treeItem.Path));
-                }
-                else if (treeItem.Type == TreeType.Blob)
-                {
-                    var blob = github.Git.Blob.Get(owner, repository, treeItem.Sha).Result;
+               var blob = github.Git.Blob.Get(owner, repository, treeItem.Sha).Result;
 
-                    WriteFile(Path.Combine(targetPath, treeItem.Path), blob.Content, blob.Encoding);
-                }
+               WriteFile(Path.Combine(targetPath, treeItem.Path), blob.Content, blob.Encoding);
             }
-        }
+         }
+      }
 
-        private void EnsureFolderExists(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-        }
+      private void EnsureFolderExists(string path)
+      {
+         if (!Directory.Exists(path))
+         {
+            Directory.CreateDirectory(path);
+         }
+      }
 
-        private void WriteFile(string path, string content, EncodingType encoding)
-        {
-            if (encoding == EncodingType.Base64)
-            {
-                var bytes = Convert.FromBase64String(content);
-                var utf8Contents = Encoding.UTF8.GetString(bytes).Replace("\n", Environment.NewLine);
+      private void WriteFile(string path, string content, EncodingType encoding)
+      {
+         if (encoding == EncodingType.Base64)
+         {
+            var bytes = Convert.FromBase64String(content);
+            var utf8Contents = Encoding.UTF8.GetString(bytes).Replace("\n", Environment.NewLine);
 
-                File.WriteAllText(path, utf8Contents);
-            }
-            else
-            {
-                throw new NotSupportedException(string.Format("Encoding of type {0} not supported", encoding));
-            }
-        }
-    }
+            File.WriteAllText(path, utf8Contents);
+         }
+         else
+         {
+            throw new NotSupportedException(string.Format("Encoding of type {0} not supported", encoding));
+         }
+      }
+   }
 }
