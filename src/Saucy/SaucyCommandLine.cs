@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CLAP;
 using Saucy.Actions;
 
@@ -14,9 +15,24 @@ namespace Saucy
       }
 
       [Verb(Description = "Restore source code packages to the local filesystem")]
-      public void Restore()
+      public void Restore(string configPath = null)
       {
-         _packagesRestorer.Restore(Environment.CurrentDirectory);
+         string rootedConfigPath;
+
+         if (string.IsNullOrEmpty(configPath))
+         {
+            rootedConfigPath = Path.Combine(Environment.CurrentDirectory, "saucy.json");
+         }
+         else if (Path.IsPathRooted(configPath))
+         {
+            rootedConfigPath = configPath;
+         }
+         else
+         {
+            rootedConfigPath = Path.Combine(Environment.CurrentDirectory, configPath);
+         }
+
+         _packagesRestorer.Restore(rootedConfigPath);
       }
    }
 }

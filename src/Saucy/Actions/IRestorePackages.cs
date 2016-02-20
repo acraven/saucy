@@ -2,6 +2,6 @@
 {
    public interface IRestorePackages
    {
-      void Restore(string saucyConfigPath);
+      void Restore(string configPath);
    }
 }

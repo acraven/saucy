@@ -4,6 +4,6 @@ namespace Saucy.Providers
 {
    public interface IProvider
    {
-      void Pull(JObject source, string localPath);
+      void Pull(JObject packageLocator, string saucyPath);
    }
 }

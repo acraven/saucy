@@ -29,15 +29,15 @@ namespace Saucy.Providers.GitHub
          return provider;
       }
 
-      public void Pull(JObject source, string localPath)
+      public void Pull(JObject packageLocator, string saucyPath)
       {
-         var owner = source["owner"].ToString();
-         var repository = source["repository"].ToString();
-         var commitSha = source["commit"].ToString();
-         var path = source["path"].ToString();
+         var owner = packageLocator["owner"].ToString();
+         var repository = packageLocator["repository"].ToString();
+         var commitSha = packageLocator["commit"].ToString();
+         var path = packageLocator["path"].ToString();
          var pathElements = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-         var targetPath = Path.Combine(localPath, pathElements.Last());
+         var targetPath = Path.Combine(saucyPath, pathElements.Last());
          EnsureFolderExists(targetPath);
 
          var github = new GitHubClient(new ProductHeaderValue("Saucy.Providers.GitHub"))
