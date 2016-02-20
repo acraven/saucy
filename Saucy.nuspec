@@ -15,5 +15,7 @@
   </metadata>
   <files>
     <file src="saucy.exe" target="tools" />
+    <file src="tools\init.ps1" target="tools" />
+    <file src="tools\Saucy.psm1" target="tools" />
   </files>
 </package>
