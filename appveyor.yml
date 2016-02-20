@@ -1,4 +1,5 @@
 version: 0.0.{build}
+skip_tags: true
 environment:
   GITHUB_ACCESS_TOKEN:
     secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
