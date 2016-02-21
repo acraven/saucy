@@ -34,6 +34,8 @@
     <Compile Include="Actions\PackagesRestorerTests.cs" />
     <Compile Include="JsonLoaderTests.cs" />
     <Compile Include="Providers\GitHub\GitHubProviderIntegrationTests.cs" />
+    <Compile Include="Providers\GitHub\GitHubProviderTests.cs" />
+    <Compile Include="Providers\ProviderMatcherTests.cs" />
     <Compile Include="SaucyCommandLineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

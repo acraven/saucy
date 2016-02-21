@@ -8,8 +8,6 @@ using Saucy.Providers;
 
 namespace Saucy.Tests.Actions
 {
-   // TODO: Ensure not duplicate matches
-
    public class PackagesRestorerTests
    {
       private JObject _saucyConfig;

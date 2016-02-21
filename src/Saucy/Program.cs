@@ -1,6 +1,7 @@
 ﻿using System;
 using CLAP;
 using Saucy.Actions;
+using Saucy.Providers.GitHub;
 
 namespace Saucy
 {
@@ -14,7 +15,7 @@ namespace Saucy
          parser.Register.HelpHandler("?,h,help", Console.WriteLine);
          parser.Register.ErrorHandler(e => { WriteUsage(parser); Console.WriteLine(e.Exception.Message); });
 
-         parser.Run(args, new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher())));
+         parser.Run(args, new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher(GitHubProvider.Create()))));
       }
 
       private static void WriteUsage(MultiParser parser)

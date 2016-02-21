@@ -33,6 +33,14 @@ namespace Saucy.Providers.GitHub
          return provider;
       }
 
+      public bool IsMatch(JObject packageLocator)
+      {
+         return packageLocator["path"] != null
+            && packageLocator["owner"] != null
+            && packageLocator["repository"] != null
+            && packageLocator["commit"] != null;
+      }
+
       public void Pull(JObject packageLocator, string saucyPath)
       {
          var path = packageLocator["path"].ToString();
