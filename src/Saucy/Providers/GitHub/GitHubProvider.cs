@@ -9,10 +9,14 @@ namespace Saucy.Providers.GitHub
 {
    public class GitHubProvider : IProvider
    {
+      private readonly ISyncFolders _syncFolders;
       private readonly string _accessToken;
 
-      private GitHubProvider(string accessToken)
+      private GitHubProvider(
+         ISyncFolders syncFolders,
+         string accessToken)
       {
+         _syncFolders = syncFolders;
          _accessToken = accessToken;
       }
 
@@ -25,7 +29,7 @@ namespace Saucy.Providers.GitHub
             throw new InvalidDataException("Environment variable GITHUB_ACCESS_TOKEN not found or empty");
          }
 
-         var provider = new GitHubProvider(accessToken);
+         var provider = new GitHubProvider(new FolderSync(), accessToken);
          return provider;
       }
 
@@ -37,14 +41,14 @@ namespace Saucy.Providers.GitHub
          var targetPath = Path.Combine(saucyPath, pathElements.Last());
          EnsureFolderExists(targetPath);
 
-         var tmpPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+         var tmpPath = Path.Combine(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), pathElements.Last());
          EnsureFolderExists(tmpPath);
 
          PullToTmpFolder(packageLocator, pathElements, tmpPath);
 
-         SyncFolders(tmpPath, targetPath);
+         _syncFolders.Sync(tmpPath, targetPath);
 
-         Directory.Delete(tmpPath);
+         Directory.Delete(tmpPath, true);
       }
 
       private void PullToTmpFolder(JObject packageLocator, string[] pathElements, string cachePath)
@@ -82,11 +86,6 @@ namespace Saucy.Providers.GitHub
                WriteFile(Path.Combine(cachePath, treeItem.Path), blob.Content, blob.Encoding);
             }
          }
-      }
-
-      private void SyncFolders(string tmpPath, string targetPath)
-      {
-         throw new NotImplementedException();
       }
 
       private void EnsureFolderExists(string path)

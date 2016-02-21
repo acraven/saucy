@@ -36,8 +36,10 @@
   <ItemGroup>
     <Compile Include="Actions\IRestorePackages.cs" />
     <Compile Include="Actions\PackagesRestorer.cs" />
+    <Compile Include="FolderSync.cs" />
     <Compile Include="ILoadJson.cs" />
     <Compile Include="IMatchProvider.cs" />
+    <Compile Include="ISyncFolders.cs" />
     <Compile Include="JsonLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
