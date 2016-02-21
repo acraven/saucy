@@ -39,6 +39,8 @@
     <Compile Include="Exceptions\AmbiguousPackageLocatorException.cs" />
     <Compile Include="FolderSync.cs" />
     <Compile Include="ILoadJson.cs" />
+    <Compile Include="ILogMessages.cs" />
+    <Compile Include="MessageLogger.cs" />
     <Compile Include="Providers\IMatchProvider.cs" />
     <Compile Include="ISyncFolders.cs" />
     <Compile Include="JsonLoader.cs" />

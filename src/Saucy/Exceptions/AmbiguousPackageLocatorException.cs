@@ -6,7 +6,7 @@ namespace Saucy.Exceptions
    public class AmbiguousPackageLocatorException : Exception
    {
       public AmbiguousPackageLocatorException(JObject packageLocator)
-         : base(string.Format("Package locator does not match any provider:\r\n{0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None)))
+         : base(string.Format("Package locator matches multiple providers:\r\n{0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None)))
       {
       }
    }

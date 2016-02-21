@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FakeItEasy;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Saucy.Actions;
+using Saucy.Exceptions;
 using Saucy.Providers;
 
 namespace Saucy.Tests.Actions
@@ -12,18 +14,19 @@ namespace Saucy.Tests.Actions
    {
       private JObject _saucyConfig;
       private ILoadJson _jsonLoader;
+      private ILogMessages _messageLogger;
       private StubProviderMatcher _providerMatcher;
 
       [Test]
       public void ShouldAttemptToGetMatchingProviderForEachPackage()
       {
-         SetupJsonLoader(@"myFolder\config.json");
+         SetupJsonLoader(@"myFolder\config.json", "{packages:[{package:\"myPackageA\"},{package:\"myPackageB\"}]}");
          SetupProviderMatcher();
 
          var packageLocatorA = (JObject)_saucyConfig["packages"][0];
          var packageLocatorB = (JObject)_saucyConfig["packages"][1];
 
-         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher);
+         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, A.Fake<ILogMessages>());
          testSubject.Restore(@"myFolder\config.json");
 
          Assert.That(_providerMatcher.MatchPackageLocatorsArgs.ToArray(), Is.EqualTo(new[] { packageLocatorA, packageLocatorB }));
@@ -35,22 +38,53 @@ namespace Saucy.Tests.Actions
          var providerA = A.Fake<IProvider>();
          var providerB = A.Fake<IProvider>();
 
-         SetupJsonLoader(@"project\myFolder\config.json");
+         SetupJsonLoader(@"project\myFolder\config.json", "{packages:[{package:\"myPackageA\"},{package:\"myPackageB\"}]}");
          SetupProviderMatcher(providerA, providerB);
 
          var packageLocatorA = (JObject)_saucyConfig["packages"][0];
          var packageLocatorB = (JObject)_saucyConfig["packages"][1];
 
-         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher);
+         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, A.Fake<ILogMessages>());
          testSubject.Restore(@"project\myFolder\config.json");
 
          A.CallTo(() => providerA.Pull(packageLocatorA, @"project\myFolder\saucy")).MustHaveHappened(Repeated.Exactly.Once);
          A.CallTo(() => providerB.Pull(packageLocatorB, @"project\myFolder\saucy")).MustHaveHappened(Repeated.Exactly.Once);
       }
 
-      private void SetupJsonLoader(string path)
+      [Test]
+      public void ShouldLogMessageIfNoMatch()
       {
-         _saucyConfig = JObject.Parse("{packages:[{package:\"myPackageA\"},{package:\"myPackageB\"}]}");
+         SetupJsonLoader(@"project\myFolder\config.json", "{packages:[{\"locator\":\"id\"}]}");
+         SetupProviderMatcher();
+         var messageLogger = new StubMessageLogger();
+
+         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, messageLogger);
+
+         testSubject.Restore(@"project\myFolder\config.json");
+
+         Assert.That(messageLogger.Messages.Count, Is.EqualTo(1));
+         Assert.That(messageLogger.Messages[0], Is.EqualTo("Package locator does not match any provider:\r\n{\"locator\":\"id\"}"));
+      }
+
+      [Test]
+      public void ShouldLogMessageIfMatcherThrowsAmbiguousPackageLocatorException()
+      {
+         SetupJsonLoader(@"project\myFolder\config.json", "{packages:[{\"locator\":\"id\"}]}");
+         var messageLogger = new StubMessageLogger();
+         var myProviderMatcher = A.Fake<IMatchProvider>();
+         A.CallTo(() => myProviderMatcher.Match(A<JObject>._)).Throws(new AmbiguousPackageLocatorException(new JObject()));
+         
+         var testSubject = new PackagesRestorer(_jsonLoader, myProviderMatcher, messageLogger);
+
+         testSubject.Restore(@"project\myFolder\config.json");
+
+         Assert.That(messageLogger.Messages.Count, Is.EqualTo(1));
+         Assert.That(messageLogger.Messages[0], Is.EqualTo("Package locator matches multiple providers:\r\n{\"locator\":\"id\"}"));
+      }
+
+      private void SetupJsonLoader(string path, string json)
+      {
+         _saucyConfig = JObject.Parse(json);
 
          _jsonLoader = A.Fake<ILoadJson>();
          A.CallTo(() => _jsonLoader.Load(path)).Returns(_saucyConfig);
@@ -84,7 +118,27 @@ namespace Saucy.Tests.Actions
                return provider;
             }
 
-            return A.Fake<IProvider>();
+            return null;
+         }
+      }
+
+      private class StubMessageLogger : ILogMessages
+      {
+         private List<string> _messages = new List<string>();
+
+         public List<string> Messages
+         {
+            get { return _messages; }
+         }
+
+         public void Log(string message)
+         {
+            _messages.Add(message);
+         }
+
+         public void Log(string format, params object[] args)
+         {
+            _messages.Add(string.Format(format, args));
          }
       }
    }

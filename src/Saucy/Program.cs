@@ -15,7 +15,7 @@ namespace Saucy
          parser.Register.HelpHandler("?,h,help", Console.WriteLine);
          parser.Register.ErrorHandler(e => { WriteUsage(parser); Console.WriteLine(e.Exception.Message); });
 
-         parser.Run(args, new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher(GitHubProvider.Create()))));
+         parser.Run(args, new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher(GitHubProvider.Create()), new MessageLogger())));
       }
 
       private static void WriteUsage(MultiParser parser)
