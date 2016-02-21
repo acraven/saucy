@@ -43,6 +43,20 @@ namespace Saucy.Providers.GitHub.Tests
          AssertFoldersAreEqual(_localPath, _compareWithPath);
       }
 
+      [Test]
+      public void pull_third_commit_of_example_a_on_top_of_second_commit_should_remove_renamed_file()
+      {
+         var testSubject = GitHubProvider.Create();
+         var source2 = JObject.Parse("{owner:\"acraven\",repository:\"saucy-examples\",commit:\"d01f7c95a06a347fc6d73fa8c5fbe121d355ebc2\",path:\"src/Saucy.Example.ProjectA\"}");
+         var source3 = JObject.Parse("{owner:\"acraven\",repository:\"saucy-examples\",commit:\"b984a5f482d4f4d459d24a20a321e73c6cb155ab\",path:\"src/Saucy.Example.ProjectA\"}");
+
+         testSubject.Pull(source2, _localPath);
+         testSubject.Pull(source3, _localPath);
+
+         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\ThirdCommitProjectA.zip", _compareWithPath);
+         AssertFoldersAreEqual(_localPath, _compareWithPath);
+      }
+
       //todo: truncated
       //todo: missing path element
       //todo: handle invalid responses
