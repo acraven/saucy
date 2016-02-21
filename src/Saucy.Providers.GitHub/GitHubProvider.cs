@@ -31,14 +31,27 @@ namespace Saucy.Providers.GitHub
 
       public void Pull(JObject packageLocator, string saucyPath)
       {
-         var owner = packageLocator["owner"].ToString();
-         var repository = packageLocator["repository"].ToString();
-         var commitSha = packageLocator["commit"].ToString();
          var path = packageLocator["path"].ToString();
          var pathElements = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
          var targetPath = Path.Combine(saucyPath, pathElements.Last());
          EnsureFolderExists(targetPath);
+
+         var tmpPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+         EnsureFolderExists(tmpPath);
+
+         PullToTmpFolder(packageLocator, pathElements, tmpPath);
+
+         SyncFolders(tmpPath, targetPath);
+
+         Directory.Delete(tmpPath);
+      }
+
+      private void PullToTmpFolder(JObject packageLocator, string[] pathElements, string cachePath)
+      {
+         var owner = packageLocator["owner"].ToString();
+         var repository = packageLocator["repository"].ToString();
+         var commitSha = packageLocator["commit"].ToString();
 
          var github = new GitHubClient(new ProductHeaderValue("Saucy.Providers.GitHub"))
          {
@@ -60,15 +73,20 @@ namespace Saucy.Providers.GitHub
          {
             if (treeItem.Type == TreeType.Tree)
             {
-               EnsureFolderExists(Path.Combine(targetPath, treeItem.Path));
+               EnsureFolderExists(Path.Combine(cachePath, treeItem.Path));
             }
             else if (treeItem.Type == TreeType.Blob)
             {
                var blob = github.Git.Blob.Get(owner, repository, treeItem.Sha).Result;
 
-               WriteFile(Path.Combine(targetPath, treeItem.Path), blob.Content, blob.Encoding);
+               WriteFile(Path.Combine(cachePath, treeItem.Path), blob.Content, blob.Encoding);
             }
          }
+      }
+
+      private void SyncFolders(string tmpPath, string targetPath)
+      {
+         throw new NotImplementedException();
       }
 
       private void EnsureFolderExists(string path)
