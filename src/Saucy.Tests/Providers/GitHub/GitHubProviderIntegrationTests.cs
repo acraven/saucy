@@ -3,8 +3,9 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Saucy.Providers.GitHub;
 
-namespace Saucy.Providers.GitHub.Tests
+namespace Saucy.Tests.Providers.GitHub
 {
    [Category("integration")]
    public class GitHubProviderIntegrationTests
