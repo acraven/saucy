@@ -1,11 +1,13 @@
 version: 0.0.{build}
 skip_tags: true
+init:
+- git config --global core.autocrlf input
+clone_depth: 1
 environment:
   GITHUB_ACCESS_TOKEN:
     secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
 configuration: Release
 platform: Any CPU
-clone_depth: 1
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'

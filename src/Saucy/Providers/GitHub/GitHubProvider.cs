@@ -109,9 +109,7 @@ namespace Saucy.Providers.GitHub
          if (encoding == EncodingType.Base64)
          {
             var bytes = Convert.FromBase64String(content);
-            var utf8Contents = Encoding.UTF8.GetString(bytes).Replace("\n", Environment.NewLine);
-
-            File.WriteAllText(path, utf8Contents);
+            File.WriteAllBytes(path, bytes);
          }
          else
          {

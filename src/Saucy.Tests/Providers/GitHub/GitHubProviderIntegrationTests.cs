@@ -11,13 +11,11 @@ namespace Saucy.Tests.Providers.GitHub
    public class GitHubProviderIntegrationTests
    {
       private string _localPath;
-      private string _compareWithPath;
 
       [SetUp]
       public void SetupBeforeEachTest()
       {
          _localPath = Guid.NewGuid().ToString();
-         _compareWithPath = Guid.NewGuid().ToString();
       }
 
       [Test]
@@ -28,8 +26,7 @@ namespace Saucy.Tests.Providers.GitHub
 
          testSubject.Pull(source, _localPath);
 
-         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\FirstCommitProjectA.zip", _compareWithPath);
-         AssertFoldersAreEqual(_localPath, _compareWithPath);
+         AssertFoldersAreEqual(_localPath, @"TestData\FirstCommitProjectA");
       }
 
       [Test]
@@ -40,8 +37,7 @@ namespace Saucy.Tests.Providers.GitHub
 
          testSubject.Pull(source, _localPath);
 
-         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\SecondCommitProjectA.zip", _compareWithPath);
-         AssertFoldersAreEqual(_localPath, _compareWithPath);
+         AssertFoldersAreEqual(_localPath, @"TestData\SecondCommitProjectA");
       }
 
       [Test]
@@ -54,8 +50,22 @@ namespace Saucy.Tests.Providers.GitHub
          testSubject.Pull(source2, _localPath);
          testSubject.Pull(source3, _localPath);
 
-         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\ThirdCommitProjectA.zip", _compareWithPath);
-         AssertFoldersAreEqual(_localPath, _compareWithPath);
+         AssertFoldersAreEqual(_localPath, @"TestData\ThirdCommitProjectA");
+      }
+
+      [Test]
+      public void pull_fourth_commit_of_example_a_including_binary_file()
+      {
+         var testSubject = GitHubProvider.Create();
+         var source = JObject.Parse("{owner:\"acraven\",repository:\"saucy-examples\",commit:\"49e6eee853ef692e1936558445ff619bf45a1df8\",path:\"src/Saucy.Example.ProjectA\"}");
+
+         testSubject.Pull(source, _localPath);
+
+         var contents = File.ReadAllBytes(_localPath + @"\Saucy.Example.ProjectA\256-bytes.bin");
+
+         var expectedContents = Enumerable.Range(0, 256).Select(c => (byte)c).ToArray();
+
+         CollectionAssert.AreEqual(contents, expectedContents);
       }
 
       //todo: truncated
