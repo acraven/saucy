@@ -38,24 +38,6 @@
     <Compile Include="Providers\ProviderMatcherTests.cs" />
     <Compile Include="SaucyCommandLineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="TestData\FirstCommitProjectA\Saucy.Example.ProjectA\Properties\AssemblyInfo.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\FirstCommitProjectA\Saucy.Example.ProjectA\Status.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\SecondCommitProjectA\Saucy.Example.ProjectA\Properties\AssemblyInfo.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\SecondCommitProjectA\Saucy.Example.ProjectA\Status.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\ThirdCommitProjectA\Saucy.Example.ProjectA\Health.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\ThirdCommitProjectA\Saucy.Example.ProjectA\Properties\AssemblyInfo.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
@@ -71,6 +53,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Saucy\Saucy.csproj">
@@ -83,15 +66,13 @@
     <None Include="TestData\EmptyJsonFile.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TestData\FirstCommitProjectA\Saucy.Example.ProjectA\Saucy.Example.ProjectA.csproj">
+    <None Include="TestData\FirstCommitProjectA.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\SecondCommitProjectA\Saucy.Example.ProjectA\Saucy.Example.ProjectA.csproj">
+    <None Include="TestData\SecondCommitProjectA.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\ThirdCommitProjectA\Saucy.Example.ProjectA\Saucy.Example.ProjectA.csproj">
+    <None Include="TestData\ThirdCommitProjectA.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -14,7 +14,6 @@ namespace Saucy.Tests.Actions
    {
       private JObject _saucyConfig;
       private ILoadJson _jsonLoader;
-      private ILogMessages _messageLogger;
       private StubProviderMatcher _providerMatcher;
 
       [Test]

@@ -43,6 +43,9 @@ namespace Saucy.Providers.GitHub
 
       public void Pull(JObject packageLocator, string saucyPath)
       {
+         if (packageLocator == null) throw new ArgumentNullException(nameof(packageLocator));
+         if (saucyPath == null) throw new ArgumentNullException(nameof(saucyPath));
+
          var path = packageLocator["path"].ToString();
          var pathElements = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 

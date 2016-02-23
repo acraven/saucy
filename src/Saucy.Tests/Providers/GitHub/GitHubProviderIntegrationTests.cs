@@ -11,11 +11,29 @@ namespace Saucy.Tests.Providers.GitHub
    public class GitHubProviderIntegrationTests
    {
       private string _localPath;
+      private string _compareWithPath;
 
       [SetUp]
       public void SetupBeforeEachTest()
       {
          _localPath = Guid.NewGuid().ToString();
+         _compareWithPath = Guid.NewGuid().ToString();
+      }
+
+      [Test]
+      public void throw_argument_null_exception_if_locator_is_null()
+      {
+         var testSubject = GitHubProvider.Create();
+
+         Assert.That(() => testSubject.Pull(null, "myPath"), Throws.InstanceOf<ArgumentNullException>());
+      }
+
+      [Test]
+      public void throw_argument_null_exception_if_saucy_path_is_null()
+      {
+         var testSubject = GitHubProvider.Create();
+
+         Assert.That(() => testSubject.Pull(new JObject(), null), Throws.InstanceOf<ArgumentNullException>());
       }
 
       [Test]
@@ -26,7 +44,8 @@ namespace Saucy.Tests.Providers.GitHub
 
          testSubject.Pull(source, _localPath);
 
-         AssertFoldersAreEqual(_localPath, @"TestData\FirstCommitProjectA");
+         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\FirstCommitProjectA.zip", _compareWithPath);
+         AssertFoldersAreEqual(_localPath, _compareWithPath);
       }
 
       [Test]
@@ -37,7 +56,8 @@ namespace Saucy.Tests.Providers.GitHub
 
          testSubject.Pull(source, _localPath);
 
-         AssertFoldersAreEqual(_localPath, @"TestData\SecondCommitProjectA");
+         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\SecondCommitProjectA.zip", _compareWithPath);
+         AssertFoldersAreEqual(_localPath, _compareWithPath);
       }
 
       [Test]
@@ -50,7 +70,8 @@ namespace Saucy.Tests.Providers.GitHub
          testSubject.Pull(source2, _localPath);
          testSubject.Pull(source3, _localPath);
 
-         AssertFoldersAreEqual(_localPath, @"TestData\ThirdCommitProjectA");
+         System.IO.Compression.ZipFile.ExtractToDirectory(@"TestData\ThirdCommitProjectA.zip", _compareWithPath);
+         AssertFoldersAreEqual(_localPath, _compareWithPath);
       }
 
       [Test]
@@ -95,16 +116,8 @@ namespace Saucy.Tests.Providers.GitHub
             var actualContents = File.ReadAllBytes(actualFile);
             var expectedContents = File.ReadAllBytes(expectedFile);
 
-            // TODO: Sort this out, it's horrid. Some sort of trailing LF problem, but only with AssemblyInfo.cs
-            if (file == "AssemblyInfo.cs" && actualContents.Length == expectedContents.Length + 1 && actualContents.Last() == 10)
-            {
-               CollectionAssert.AreEqual(actualContents.Take(expectedContents.Length), expectedContents, string.Format("Content of files {0} and {1} must match", actualFile, expectedFile));
-            }
-            else
-            {
-               Assert.That(actualContents.Length, Is.EqualTo(expectedContents.Length), string.Format("Length of files {0} and {1} must match", actualFile, expectedFile));
-               CollectionAssert.AreEqual(actualContents, expectedContents, string.Format("Content of files {0} and {1} must match", actualFile, expectedFile));
-            }
+            Assert.That(actualContents.Length, Is.EqualTo(expectedContents.Length), string.Format("Length of files {0} and {1} must match", actualFile, expectedFile));
+            CollectionAssert.AreEqual(actualContents, expectedContents, string.Format("Content of files {0} and {1} must match", actualFile, expectedFile));
          }
 
          foreach (var folder in expectedFolders)
