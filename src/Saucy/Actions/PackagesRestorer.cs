@@ -43,7 +43,7 @@ namespace Saucy.Actions
                   _messageLogger.Log("Package locator does not match any provider:\r\n{0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None));
                }
             }
-            catch (AmbiguousPackageLocatorException e)
+            catch (AmbiguousPackageLocatorException)
             {
                _messageLogger.Log("Package locator matches multiple providers:\r\n{0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None));
             }

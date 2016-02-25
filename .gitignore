@@ -4,6 +4,7 @@
 # Customisations
 *.ncrunchproject
 *.ncrunchsolution
+saucy/
 
 # User-specific files
 *.suo

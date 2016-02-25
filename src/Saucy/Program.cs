@@ -1,5 +1,4 @@
-﻿using System;
-using CLAP;
+﻿using CommandLineParser;
 using Saucy.Actions;
 using Saucy.Providers.GitHub;
 
@@ -7,21 +6,15 @@ namespace Saucy
 {
    public class Program
    {
-      public static void Main(string[] args)
+      public static int Main(string[] args)
       {
-         var parser = new Parser<SaucyCommandLine>();
+         var restoreVerb = new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher(GitHubProvider.Create()), new MessageLogger()));
 
-         parser.Register.EmptyHandler(() => WriteUsage(parser));
-         parser.Register.HelpHandler("?,h,help", Console.WriteLine);
-         parser.Register.ErrorHandler(e => { WriteUsage(parser); Console.WriteLine(e.Exception.Message); });
+         var runner = new Runner();
+         runner.Register(restoreVerb);
 
-         parser.Run(args, new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher(GitHubProvider.Create()), new MessageLogger())));
-      }
-
-      private static void WriteUsage(MultiParser parser)
-      {
-         Console.WriteLine("USAGE: saucy");
-         Console.WriteLine(parser.GetHelpString());
+         var exitCode = runner.Run(args);
+         return exitCode;
       }
    }
 }

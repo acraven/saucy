@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using CLAP;
+using CommandLineParser;
 using Saucy.Actions;
 
 namespace Saucy
@@ -14,7 +14,8 @@ namespace Saucy
          _packagesRestorer = packagesRestorer;
       }
 
-      [Verb(Description = "Restore source code packages to the local filesystem")]
+      // Restore source code packages to the local filesystem
+      [Verb]
       public void Restore(string configPath = null)
       {
          string rootedConfigPath;
