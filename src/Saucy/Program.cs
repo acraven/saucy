@@ -8,7 +8,11 @@ namespace Saucy
    {
       public static int Main(string[] args)
       {
-         var restoreVerb = new SaucyCommandLine(new PackagesRestorer(new JsonLoader(), new ProviderMatcher(GitHubProvider.Create()), new MessageLogger()));
+         var restoreVerb = new SaucyCommandLine(
+            new PackagesRestorer(
+               new JsonLoader(),
+               new ProviderMatcher(GitHubProvider.Create()),
+               new ConsoleWriter()));
 
          var runner = new Runner();
          runner.Register(restoreVerb);

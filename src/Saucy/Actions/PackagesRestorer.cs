@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using CommandLineParser;
 using Newtonsoft.Json.Linq;
 using Saucy.Exceptions;
 
@@ -8,16 +9,16 @@ namespace Saucy.Actions
    {
       private readonly ILoadJson _jsonLoader;
       private readonly IMatchProvider _providerMatcher;
-      private readonly ILogMessages _messageLogger;
+      private readonly IWriteToConsole _consoleWriter;
 
       public PackagesRestorer(
          ILoadJson jsonLoader,
          IMatchProvider providerMatcher,
-         ILogMessages messageLogger)
+         IWriteToConsole consoleWriter)
       {
          _jsonLoader = jsonLoader;
          _providerMatcher = providerMatcher;
-         _messageLogger = messageLogger;
+         _consoleWriter = consoleWriter;
       }
 
       public void Restore(string configPath)
@@ -40,12 +41,12 @@ namespace Saucy.Actions
                }
                else
                {
-                  _messageLogger.Log("Package locator does not match any provider:\r\n{0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None));
+                  _consoleWriter.Write("Package locator does not match any provider: {0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None));
                }
             }
             catch (AmbiguousPackageLocatorException)
             {
-               _messageLogger.Log("Package locator matches multiple providers:\r\n{0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None));
+               _consoleWriter.Write("Package locator matches multiple providers: {0}", packageLocator.ToString(Newtonsoft.Json.Formatting.None));
             }
          }
       }
