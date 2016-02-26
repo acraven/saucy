@@ -61,7 +61,9 @@ namespace Saucy.Tests.Actions
 
          testSubject.Restore(@"project\myFolder\config.json");
 
-         messageLogger.AssertWrittenMessages("Package locator does not match any provider: {\"locator\":\"id\"}");
+         messageLogger.AssertWrittenMessages(
+            @"Restoring packages from project\myFolder\config.json",
+            "Package locator does not match any provider: {\"locator\":\"id\"}");
       }
 
       [Test]
@@ -76,7 +78,9 @@ namespace Saucy.Tests.Actions
 
          testSubject.Restore(@"project\myFolder\config.json");
 
-         messageLogger.AssertWrittenMessages("Package locator matches multiple providers: {\"locator\":\"id\"}");
+         messageLogger.AssertWrittenMessages(
+            @"Restoring packages from project\myFolder\config.json",
+            "Package locator matches multiple providers: {\"locator\":\"id\"}");
       }
 
       private void SetupJsonLoader(string path, string json)
