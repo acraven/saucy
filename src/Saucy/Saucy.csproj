@@ -48,6 +48,7 @@
     <Compile Include="Providers\GitHub\GitHubProvider.cs" />
     <Compile Include="Providers\IProvider.cs" />
     <Compile Include="SaucyCommandLine.cs" />
+    <Compile Include="SaucySettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

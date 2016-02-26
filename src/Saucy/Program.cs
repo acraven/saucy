@@ -12,7 +12,8 @@ namespace Saucy
             new PackagesRestorer(
                new JsonLoader(),
                new ProviderMatcher(GitHubProvider.Create()),
-               new ConsoleWriter()));
+               new ConsoleWriter(),
+               new SaucySettings()));
 
          var runner = new Runner();
          runner.Register(restoreVerb);

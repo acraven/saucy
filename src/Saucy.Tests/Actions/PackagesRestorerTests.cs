@@ -25,7 +25,7 @@ namespace Saucy.Tests.Actions
          var packageLocatorA = (JObject)_saucyConfig["packages"][0];
          var packageLocatorB = (JObject)_saucyConfig["packages"][1];
 
-         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, A.Fake<IWriteToConsole>());
+         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, A.Fake<IWriteToConsole>(), new SaucySettings());
          testSubject.Restore(@"myFolder\config.json");
 
          Assert.That(_providerMatcher.MatchPackageLocatorsArgs.ToArray(), Is.EqualTo(new[] { packageLocatorA, packageLocatorB }));
@@ -43,11 +43,11 @@ namespace Saucy.Tests.Actions
          var packageLocatorA = (JObject)_saucyConfig["packages"][0];
          var packageLocatorB = (JObject)_saucyConfig["packages"][1];
 
-         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, A.Fake<IWriteToConsole>());
+         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, A.Fake<IWriteToConsole>(), new SaucySettings { PackagesFolder = "packagesFolder" });
          testSubject.Restore(@"project\myFolder\config.json");
 
-         A.CallTo(() => providerA.Pull(packageLocatorA, @"project\myFolder\saucy")).MustHaveHappened(Repeated.Exactly.Once);
-         A.CallTo(() => providerB.Pull(packageLocatorB, @"project\myFolder\saucy")).MustHaveHappened(Repeated.Exactly.Once);
+         A.CallTo(() => providerA.Pull(packageLocatorA, @"project\myFolder\packagesFolder")).MustHaveHappened(Repeated.Exactly.Once);
+         A.CallTo(() => providerB.Pull(packageLocatorB, @"project\myFolder\packagesFolder")).MustHaveHappened(Repeated.Exactly.Once);
       }
 
       [Test]
@@ -57,12 +57,11 @@ namespace Saucy.Tests.Actions
          SetupProviderMatcher();
          var messageLogger = new StubConsoleWriter();
 
-         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, messageLogger);
+         var testSubject = new PackagesRestorer(_jsonLoader, _providerMatcher, messageLogger, new SaucySettings());
 
          testSubject.Restore(@"project\myFolder\config.json");
 
-         Assert.That(messageLogger.Messages.Count, Is.EqualTo(1));
-         Assert.That(messageLogger.Messages[0], Is.EqualTo("Package locator does not match any provider: {\"locator\":\"id\"}"));
+         messageLogger.AssertWrittenMessages("Package locator does not match any provider: {\"locator\":\"id\"}");
       }
 
       [Test]
@@ -73,12 +72,11 @@ namespace Saucy.Tests.Actions
          var myProviderMatcher = A.Fake<IMatchProvider>();
          A.CallTo(() => myProviderMatcher.Match(A<JObject>._)).Throws(new AmbiguousPackageLocatorException(new JObject()));
          
-         var testSubject = new PackagesRestorer(_jsonLoader, myProviderMatcher, messageLogger);
+         var testSubject = new PackagesRestorer(_jsonLoader, myProviderMatcher, messageLogger, new SaucySettings());
 
          testSubject.Restore(@"project\myFolder\config.json");
 
-         Assert.That(messageLogger.Messages.Count, Is.EqualTo(1));
-         Assert.That(messageLogger.Messages[0], Is.EqualTo("Package locator matches multiple providers: {\"locator\":\"id\"}"));
+         messageLogger.AssertWrittenMessages("Package locator matches multiple providers: {\"locator\":\"id\"}");
       }
 
       private void SetupJsonLoader(string path, string json)
@@ -123,21 +121,21 @@ namespace Saucy.Tests.Actions
 
       private class StubConsoleWriter : IWriteToConsole
       {
-         public List<string> Messages { get; } = new List<string>();
+         private readonly IList<string> _messages = new List<string>();
 
          public void Write(string message)
          {
-            Messages.Add(message);
+            _messages.Add(message);
          }
 
          public void Write(string format, params object[] args)
          {
-            Messages.Add(string.Format(format, args));
+            _messages.Add(string.Format(format, args));
          }
 
          public void AssertWrittenMessages(params string[] expectedMessages)
          {
-            CollectionAssert.AreEqual(expectedMessages, Messages.ToArray());
+            CollectionAssert.AreEqual(expectedMessages, _messages.ToArray());
          }
       }
    }

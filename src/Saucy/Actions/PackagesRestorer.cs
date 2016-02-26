@@ -10,15 +10,18 @@ namespace Saucy.Actions
       private readonly ILoadJson _jsonLoader;
       private readonly IMatchProvider _providerMatcher;
       private readonly IWriteToConsole _consoleWriter;
+      private readonly SaucySettings _settings;
 
       public PackagesRestorer(
-         ILoadJson jsonLoader,
-         IMatchProvider providerMatcher,
-         IWriteToConsole consoleWriter)
+        ILoadJson jsonLoader,
+        IMatchProvider providerMatcher,
+        IWriteToConsole consoleWriter,
+        SaucySettings settings)
       {
          _jsonLoader = jsonLoader;
          _providerMatcher = providerMatcher;
          _consoleWriter = consoleWriter;
+         _settings = settings;
       }
 
       public void Restore(string configPath)
@@ -27,7 +30,7 @@ namespace Saucy.Actions
 
          var packages = (JArray)config["packages"];
 
-         var saucyPath = Path.Combine(Path.GetDirectoryName(configPath), "saucy");
+         var packagesPath = Path.Combine(Path.GetDirectoryName(configPath), _settings.PackagesFolder);
 
          foreach (var packageLocator in packages)
          {
@@ -37,7 +40,7 @@ namespace Saucy.Actions
 
                if (provider != null)
                {
-                  provider.Pull((JObject)packageLocator, saucyPath);
+                  provider.Pull((JObject)packageLocator, packagesPath);
                }
                else
                {
