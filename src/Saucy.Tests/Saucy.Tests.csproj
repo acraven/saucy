@@ -56,8 +56,8 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\saucy\CommandLineRunner\CommandLineRunner.csproj">
-      <Project>{2A9012D5-1A13-4197-9621-5951848C72E2}</Project>
+    <ProjectReference Include="..\..\.saucy\CommandLineRunner\CommandLineRunner.csproj">
+      <Project>{2a9012d5-1a13-4197-9621-5951848c72e2}</Project>
       <Name>CommandLineRunner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Saucy\Saucy.csproj">

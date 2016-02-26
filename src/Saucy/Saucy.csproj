@@ -67,7 +67,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\saucy\CommandLineRunner\CommandLineRunner.csproj">
+    <ProjectReference Include="..\..\.saucy\CommandLineRunner\CommandLineRunner.csproj">
       <Project>{2a9012d5-1a13-4197-9621-5951848c72e2}</Project>
       <Name>CommandLineRunner</Name>
     </ProjectReference>
