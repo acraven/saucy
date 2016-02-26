@@ -10,10 +10,10 @@ namespace Saucy.Tests
       [Test]
       public void RestoreCallsPackagesRestorerWithDefaultConfig()
       {
-         var expectedPath = Path.Combine(Environment.CurrentDirectory, "saucy.json");
+         var expectedPath = Path.Combine(Environment.CurrentDirectory, "theConfig.json");
 
          var packagesRestorer = new StubPackagesRestorer();
-         var testSubject = new SaucyCommandLine(packagesRestorer);
+         var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings { ConfigFile = "theConfig.json" });
 
          testSubject.Restore();
 
@@ -27,7 +27,7 @@ namespace Saucy.Tests
          var expectedPath = Path.Combine(Environment.CurrentDirectory, "myConfig.json");
 
          var packagesRestorer = new StubPackagesRestorer();
-         var testSubject = new SaucyCommandLine(packagesRestorer);
+         var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings());
 
          testSubject.Restore("myConfig.json");
 
@@ -41,9 +41,23 @@ namespace Saucy.Tests
          const string expectedPath = @"C:\myConfig.json";
 
          var packagesRestorer = new StubPackagesRestorer();
-         var testSubject = new SaucyCommandLine(packagesRestorer);
+         var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings());
 
          testSubject.Restore(@"C:\myConfig.json");
+
+         Assert.That(packagesRestorer.RestoreCallCount, Is.EqualTo(1));
+         Assert.That(packagesRestorer.LastRestoreConfigPathArg, Is.EqualTo(expectedPath));
+      }
+
+      [Test]
+      public void RestoreCallsPackagesRestorerWithDefaultConfigIfPathIsFolder()
+      {
+         const string expectedPath = @"C:\defaultConfig.json";
+
+         var packagesRestorer = new StubPackagesRestorer();
+         var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings { ConfigFile = "defaultConfig.json" });
+
+         testSubject.Restore(@"C:\");
 
          Assert.That(packagesRestorer.RestoreCallCount, Is.EqualTo(1));
          Assert.That(packagesRestorer.LastRestoreConfigPathArg, Is.EqualTo(expectedPath));

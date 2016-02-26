@@ -8,10 +8,14 @@ namespace Saucy
    public class SaucyCommandLine
    {
       private readonly IRestorePackages _packagesRestorer;
+      private readonly SaucySettings _settings;
 
-      public SaucyCommandLine(IRestorePackages packagesRestorer)
+      public SaucyCommandLine(
+         IRestorePackages packagesRestorer,
+         SaucySettings settings)
       {
          _packagesRestorer = packagesRestorer;
+         _settings = settings;
       }
 
       // Restore source code packages to the local filesystem
@@ -22,15 +26,23 @@ namespace Saucy
 
          if (string.IsNullOrEmpty(configPath))
          {
-            rootedConfigPath = Path.Combine(Environment.CurrentDirectory, "saucy.json");
-         }
-         else if (Path.IsPathRooted(configPath))
-         {
-            rootedConfigPath = configPath;
+            rootedConfigPath = Path.Combine(Environment.CurrentDirectory, _settings.ConfigFile);
          }
          else
          {
-            rootedConfigPath = Path.Combine(Environment.CurrentDirectory, configPath);
+            if (Path.IsPathRooted(configPath))
+            {
+               rootedConfigPath = configPath;
+            }
+            else
+            {
+               rootedConfigPath = Path.Combine(Environment.CurrentDirectory, configPath);
+            }
+
+            if (Directory.Exists(configPath))
+            {
+               rootedConfigPath = Path.Combine(rootedConfigPath, _settings.ConfigFile);
+            }
          }
 
          _packagesRestorer.Restore(rootedConfigPath);
