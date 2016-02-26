@@ -17,7 +17,7 @@ assembly_info:
 cache: C:\Users\appveyor\AppData\Local\NuGet\Cache
 before_build:
 - nuget restore Saucy.sln
-- .\packages\saucy.0.0.60\tools\saucy.exe restore
+- .\packages\saucy.0.0.64\tools\saucy.exe restore
 build:
   project: Saucy.sln
   verbosity: normal
