@@ -1,5 +1,5 @@
 {
   "packages":[
-	  {owner:"acraven",repository:"command-line-runner",commit:"011ad38ca8e8ce9c61ab536d42af9fbc8080c7f6",path:"src/CommandLineRunner"}
+	  {owner:"acraven",repository:"command-line-runner",commit:"b7c3230dd2ce91e94e9e65cff93b1332c1b6f78f",path:"src/CommandLineRunner"}
   ]
 }
