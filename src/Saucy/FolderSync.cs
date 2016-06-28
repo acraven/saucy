@@ -14,6 +14,8 @@ namespace Saucy
 
       public void Sync(string sourcePath, string targetPath)
       {
+         _logger.Verbose("Syncing folder {0} with {1}", targetPath, sourcePath);
+
          if (!Directory.Exists(sourcePath))
          {
             throw new DirectoryNotFoundException(string.Format("{0} does not exist", sourcePath));
@@ -66,8 +68,8 @@ namespace Saucy
          {
             var fullPath = Path.Combine(targetPath, folder);
 
-            _logger.Verbose("Deleting file {0}", fullPath);
-            Directory.Delete(fullPath);
+            _logger.Verbose("Deleting folder {0}", fullPath);
+            Directory.Delete(fullPath, true);
          }
 
          foreach (var folder in foldersToSync)
@@ -75,7 +77,6 @@ namespace Saucy
             var sourceFolder = Path.Combine(sourcePath, folder);
             var targetFolder = Path.Combine(targetPath, folder);
 
-            _logger.Verbose("Syncing folder {0}", targetFolder);
             Sync(sourceFolder, targetFolder);
          }
       }
