@@ -15,7 +15,7 @@ namespace Saucy.Tests
          var packagesRestorer = new StubPackagesRestorer();
          var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings { ConfigFile = "theConfig.json" });
 
-         testSubject.Restore();
+         testSubject.Restore(true);
 
          Assert.That(packagesRestorer.RestoreCallCount, Is.EqualTo(1));
          Assert.That(packagesRestorer.LastRestoreConfigPathArg, Is.EqualTo(expectedPath));
@@ -29,7 +29,7 @@ namespace Saucy.Tests
          var packagesRestorer = new StubPackagesRestorer();
          var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings());
 
-         testSubject.Restore("myConfig.json");
+         testSubject.Restore(true, "myConfig.json");
 
          Assert.That(packagesRestorer.RestoreCallCount, Is.EqualTo(1));
          Assert.That(packagesRestorer.LastRestoreConfigPathArg, Is.EqualTo(expectedPath));
@@ -43,7 +43,7 @@ namespace Saucy.Tests
          var packagesRestorer = new StubPackagesRestorer();
          var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings());
 
-         testSubject.Restore(@"C:\myConfig.json");
+         testSubject.Restore(true, @"C:\myConfig.json");
 
          Assert.That(packagesRestorer.RestoreCallCount, Is.EqualTo(1));
          Assert.That(packagesRestorer.LastRestoreConfigPathArg, Is.EqualTo(expectedPath));
@@ -57,7 +57,7 @@ namespace Saucy.Tests
          var packagesRestorer = new StubPackagesRestorer();
          var testSubject = new SaucyCommandLine(packagesRestorer, new SaucySettings { ConfigFile = "defaultConfig.json" });
 
-         testSubject.Restore(@"C:\");
+         testSubject.Restore(true, @"C:\");
 
          Assert.That(packagesRestorer.RestoreCallCount, Is.EqualTo(1));
          Assert.That(packagesRestorer.LastRestoreConfigPathArg, Is.EqualTo(expectedPath));

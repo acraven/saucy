@@ -17,7 +17,7 @@ assembly_info:
 cache: C:\Users\appveyor\AppData\Local\NuGet\Cache
 before_build:
 - nuget restore Saucy.sln
-- nuget install Saucy -Version 0.0.64 -ExcludeVersion -OutputDirectory packages
+- nuget install Saucy -Version 0.0.72 -ExcludeVersion -OutputDirectory packages
 - .\packages\saucy\tools\saucy.exe restore
 build:
   project: Saucy.sln

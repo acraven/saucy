@@ -20,7 +20,7 @@ namespace Saucy
 
       // Restore source code packages to the local filesystem
       [Verb]
-      public void Restore(string configPath = null)
+      public void Restore(bool verbose, string configPath = null)
       {
          string rootedConfigPath;
 
