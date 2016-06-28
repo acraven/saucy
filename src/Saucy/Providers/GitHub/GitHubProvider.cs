@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using Octokit;
 
@@ -12,25 +11,17 @@ namespace Saucy.Providers.GitHub
       private readonly ISyncFolders _syncFolders;
       private readonly string _accessToken;
 
-      private GitHubProvider(
+      public GitHubProvider(
          ISyncFolders syncFolders,
-         string accessToken)
+         string accessToken = null)
       {
          _syncFolders = syncFolders;
-         _accessToken = accessToken;
-      }
+         _accessToken = accessToken ?? Environment.GetEnvironmentVariable("GITHUB_ACCESS_TOKEN");
 
-      public static GitHubProvider Create()
-      {
-         var accessToken = Environment.GetEnvironmentVariable("GITHUB_ACCESS_TOKEN");
-
-         if (string.IsNullOrEmpty(accessToken))
+         if (string.IsNullOrEmpty(_accessToken))
          {
             throw new InvalidDataException("Environment variable GITHUB_ACCESS_TOKEN not found or empty");
          }
-
-         var provider = new GitHubProvider(new FolderSync(), accessToken);
-         return provider;
       }
 
       public bool IsMatch(JObject packageLocator)

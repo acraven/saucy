@@ -5,6 +5,13 @@ namespace Saucy
 {
    public class FolderSync : ISyncFolders
    {
+      private readonly ILogger _logger;
+
+      public FolderSync(ILogger logger)
+      {
+         _logger = logger;
+      }
+
       public void Sync(string sourcePath, string targetPath)
       {
          if (!Directory.Exists(sourcePath))
@@ -14,6 +21,7 @@ namespace Saucy
 
          if (!Directory.Exists(targetPath))
          {
+            _logger.Verbose("Creating folder {0}", targetPath);
             Directory.CreateDirectory(targetPath);
          }
 
@@ -21,7 +29,7 @@ namespace Saucy
          SyncFolders(sourcePath, targetPath);
       }
 
-      private static void SyncFiles(string sourcePath, string targetPath)
+      private void SyncFiles(string sourcePath, string targetPath)
       {
          var filesToSync = Directory.GetFiles(sourcePath).Select(Path.GetFileName).ToArray();
          var targetFiles = Directory.GetFiles(targetPath).Select(Path.GetFileName).ToArray();
@@ -30,7 +38,10 @@ namespace Saucy
 
          foreach (var file in filesToRemove)
          {
-            File.Delete(Path.Combine(targetPath, file));
+            var fullPath = Path.Combine(targetPath, file);
+
+            _logger.Verbose("Deleting file {0}", fullPath);
+            File.Delete(fullPath);
          }
 
          foreach (var file in filesToSync)
@@ -39,6 +50,7 @@ namespace Saucy
             var targetFile = Path.Combine(targetPath, file);
 
             // TODO: Any value in comparing contents first before overwriting?
+            _logger.Verbose("Syncing file {0}", targetFile);
             File.Copy(sourceFile, targetFile, true);
          }
       }
@@ -52,7 +64,10 @@ namespace Saucy
 
          foreach (var folder in foldersToRemove)
          {
-            Directory.Delete(Path.Combine(targetPath, folder));
+            var fullPath = Path.Combine(targetPath, folder);
+
+            _logger.Verbose("Deleting file {0}", fullPath);
+            Directory.Delete(fullPath);
          }
 
          foreach (var folder in foldersToSync)
@@ -60,6 +75,7 @@ namespace Saucy
             var sourceFolder = Path.Combine(sourcePath, folder);
             var targetFolder = Path.Combine(targetPath, folder);
 
+            _logger.Verbose("Syncing folder {0}", targetFolder);
             Sync(sourceFolder, targetFolder);
          }
       }

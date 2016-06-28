@@ -38,6 +38,7 @@
     <Compile Include="Exceptions\AmbiguousPackageLocatorException.cs" />
     <Compile Include="FolderSync.cs" />
     <Compile Include="ILoadJson.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Providers\IMatchProvider.cs" />
     <Compile Include="ISyncFolders.cs" />
     <Compile Include="JsonLoader.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Providers\IProvider.cs" />
     <Compile Include="SaucyCommandLine.cs" />
     <Compile Include="SaucySettings.cs" />
+    <Compile Include="VerboseLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
